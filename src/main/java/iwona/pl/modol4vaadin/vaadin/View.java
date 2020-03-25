@@ -24,13 +24,13 @@ import java.util.WeakHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Route("vaadin")
-public class Vaadin extends VerticalLayout {
+@Route("cars")
+public class View extends VerticalLayout {
 
     private CarServiceImpl carServiceImpl;
 
     @Autowired
-    public Vaadin(CarServiceImpl carServiceImpl) {
+    public View(CarServiceImpl carServiceImpl) {
         this.carServiceImpl = carServiceImpl;
 
         Grid<Car> grid = new Grid<>();
