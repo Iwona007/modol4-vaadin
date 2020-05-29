@@ -8,6 +8,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -20,6 +21,7 @@ import iwona.pl.modol4vaadin.model.Color;
 import iwona.pl.modol4vaadin.service.CarServiceImpl;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.WeakHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,16 +91,25 @@ public class View extends VerticalLayout {
         idFieldFilter.setPlaceholder("id filter");
 
         //find by color
-        TextField colorField = new TextField();
-        colorField.addValueChangeListener(event -> dataProvider
-                .addFilter(car -> StringUtils.containsIgnoreCase(
-                        car.getColor().name(), colorField.getValue())));
+//        TextField colorField = new TextField();
+//        colorField.addValueChangeListener(event -> dataProvider
+//                .addFilter(car -> StringUtils.containsIgnoreCase(
+//                        car.getColor().name(), colorField.getValue())));
+//
+//        colorField.setValueChangeMode(ValueChangeMode.EAGER);
+//
+//        filterRow.getCell(colorColumn).setComponent(colorField);
+//        colorField.setSizeFull();
+//        colorField.setPlaceholder("Color filter");
 
-        colorField.setValueChangeMode(ValueChangeMode.EAGER);
 
-        filterRow.getCell(colorColumn).setComponent(colorField);
-        colorField.setSizeFull();
-        colorField.setPlaceholder("Color filter");
+        ComboBox<Color> colorSearch = new ComboBox<>("Color type", Color.values());
+        colorSearch.addValueChangeListener(event -> {
+            grid.setItems(carServiceImpl.carByColor(String.valueOf(colorSearch.getValue())));
+            add(grid);
+        });
+        add(colorSearch);
+
 
         //delete
         grid.addComponentColumn(item -> createRemoveButton(grid, item))
@@ -139,7 +150,7 @@ public class View extends VerticalLayout {
                 editor.editItem(car);
                 brandField.focus();
             });
-//           edit.setEnabled(!editor.isOpen());
+            edit.setEnabled(!editor.isOpen());
             editButtons.add(edit);
             return edit;
         });
@@ -153,7 +164,7 @@ public class View extends VerticalLayout {
         grid.getElement().addEventListener("keyup", event -> editor.cancel())
                 .setFilter("event.key === 'Escape' || event.key === 'Esc'");
 
-        Div buttons = new Div(save,cancel);
+        Div buttons = new Div(save, cancel);
         editorColumn.setEditorComponent(buttons);
 
 
@@ -166,6 +177,7 @@ public class View extends VerticalLayout {
         footerRow.getCell(brandColumn).setComponent(textFieldBrand);
         footerRow.getCell(modelColumn).setComponent(textFieldModel);
         footerRow.getCell(colorColumn).setComponent(colorComboBox);
+
         footerRow.getCell(editorColumn).setComponent(addButton);
 
         add(grid);
