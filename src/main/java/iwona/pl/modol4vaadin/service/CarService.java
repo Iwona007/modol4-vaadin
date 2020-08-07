@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CarService {
+
     List<Car> getAll();
 
     Optional<Car> carById(Long carId);

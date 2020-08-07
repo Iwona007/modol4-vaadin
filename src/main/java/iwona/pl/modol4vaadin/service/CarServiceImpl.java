@@ -5,7 +5,6 @@ import iwona.pl.modol4vaadin.model.Car;
 import iwona.pl.modol4vaadin.model.Color;
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.servlet.annotation.HttpConstraint;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,26 +24,25 @@ public class CarServiceImpl implements CarService {
         return cars;
     }
 
-    @Override  //get
+    @Override
     public Optional<Car> carById(Long carId) {
         Optional<Car> findCarById = cars.stream()
                 .filter(car -> car.getCarId() == carId).findFirst();
-//        findCarById.orElseThrow(() -> new CarNotExist(carId));
         return findCarById;
     }
 
-    @Override //get by color
+    @Override
     public List<Car> carByColor(String color) {
         return getAll().stream().filter(car1 -> color.equalsIgnoreCase(car1.getColor().name()))
                 .collect(Collectors.toList());
     }
 
-    @Override //post
+    @Override
     public boolean save(Car car) {
         return cars.add(car);
     }
 
-      @Override //put
+      @Override
     public boolean changeCar(Car changedCar) {
         Optional<Car> findCar = cars.stream().filter(car -> car.getCarId() == changedCar.getCarId()).findFirst();
         if (findCar.isPresent()) {
@@ -57,7 +55,7 @@ public class CarServiceImpl implements CarService {
         return false;
     }
 
-    @Override //    patch
+    @Override
     public boolean changeColor(Long carId, Color color) {
         Optional<Car> first = cars.stream().filter(car -> car.getCarId() == carId).findFirst();
         if (first.isPresent()) {
@@ -77,16 +75,14 @@ public class CarServiceImpl implements CarService {
             return true;
         }
         return false;
-//        throw new CarNotExist(id);
     }
 
-    @Override //delete
+    @Override
     public boolean removeById(Long carId) {
         Car first = cars.stream().filter(car -> car.getCarId() == carId).findFirst().get();
         if (cars.remove(first)) {
             return true;
         }
-//        throw new CarNotExist(carId);
         return false;
     }
 
@@ -94,5 +90,4 @@ public class CarServiceImpl implements CarService {
         Car car = Collections.max(cars, Comparator.comparing(Car::getCarId));
         return car.getCarId()+1;
     }
-
 }

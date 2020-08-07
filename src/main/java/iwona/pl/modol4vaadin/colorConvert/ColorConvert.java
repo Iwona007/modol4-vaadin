@@ -10,7 +10,6 @@ public class ColorConvert {
         return EnumSet.allOf(Color.class).stream()
                 .filter(color1 -> color1.name().equalsIgnoreCase(color))
                 .findAny().get();
-//                .orElseThrow(() -> new ColorNotFound(color));
     }
 
     public boolean convertToString(Color color){
